@@ -5,6 +5,7 @@
     <uses-feature
         android:name="android.hardware.camera2"
         android:required="true" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -21,6 +22,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".TodayOutfitActivity"
+            android:label="@string/title_activity_today_outfit"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ChangeWardrobeActivity"
+            android:label="@string/title_activity_change_wardrobe"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
