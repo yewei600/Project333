@@ -8,6 +8,9 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.ericwei.project333.clothes_tab.FirstFragment;
+import com.ericwei.project333.wardrobe_tab.WardrobeFragment;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.getTabAt(0).setText("Clothes");
-        tabLayout.getTabAt(1).setText("Wardrobe");
+        tabLayout.getTabAt(1).setText("26/33");
         tabLayout.getTabAt(2).setText("Settings");
     }
 

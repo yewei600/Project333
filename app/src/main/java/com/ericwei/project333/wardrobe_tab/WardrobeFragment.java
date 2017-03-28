@@ -1,8 +1,12 @@
-package com.ericwei.project333;
+package com.ericwei.project333.wardrobe_tab;
 
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,9 +16,14 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 
+import com.ericwei.project333.R;
+import com.ericwei.project333.clothes_tab.AddClothesActivity;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 public class WardrobeFragment extends Fragment {
 
@@ -22,6 +31,8 @@ public class WardrobeFragment extends Fragment {
     private GridLayoutManager gridLayoutManager;
     private ExpandableListView expandableListView;
     private static ExpandableListAdapter adapter;
+
+    public static final String[] clothesCategory = {""};
 
     public WardrobeFragment() {
     }
@@ -36,9 +47,34 @@ public class WardrobeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_wardrobe, container, false);
         expandableListView = (ExpandableListView) view.findViewById(R.id.simple_expandable_listview);
-
         setItems();
+
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
+                    startActivityForResult(takePictureIntent, 1);
+                }
+            }
+        });
+
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+
+            Intent intent = new Intent(getContext(), AddClothesActivity.class);
+            intent.putExtra("Image", imageBitmap);
+            startActivity(intent);
+        }
+
     }
 
     // Setting headers and childs to expandable listview
