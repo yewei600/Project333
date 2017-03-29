@@ -2,21 +2,27 @@ package com.ericwei.project333.clothes_tab;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.DatabaseUtils;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.ericwei.project333.R;
 import com.ericwei.project333.data.ClothesContract.ClothesEntry;
+import com.ericwei.project333.data.ClothesDbHelper;
 import com.lyft.android.scissors.CropView;
 
 import java.io.ByteArrayOutputStream;
 
 public class AddClothesActivity extends AppCompatActivity {
+
+    private static final String TAG = AddClothesActivity.class.getSimpleName();
 
     CropView cropView;
     Button submitButton;
@@ -56,14 +62,24 @@ public class AddClothesActivity extends AppCompatActivity {
 
     private void saveItem() {
         ContentValues contentValues = new ContentValues();
+        long itemNumber = getDatabaseRowCount() + 1;
         contentValues.put(ClothesEntry.COLUMN_CATEGORY, "tops");
         contentValues.put(ClothesEntry.COLUMN_SUBCATEGORY, "shirt");
         contentValues.put(ClothesEntry.COLUMN_IMAGE, imageToByte(itemImage));
-        contentValues.put(ClothesEntry.COLUMN_ID, 1);
+        contentValues.put(ClothesEntry.COLUMN_ID, itemNumber);
 
         Uri uri = getContentResolver().insert(ClothesEntry.CONTENT_URI, contentValues);
         if (uri != null) {
-            Toast.makeText(this, "Added clothes item!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Added clothes item number" + itemNumber, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private long getDatabaseRowCount() {
+        ClothesDbHelper dbHelper = new ClothesDbHelper(this);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        long cnt = DatabaseUtils.queryNumEntries(db, ClothesEntry.TABLE_NAME);
+        Log.d(TAG, "database number of rows ==" + cnt);
+        db.close();
+        return cnt;
     }
 }

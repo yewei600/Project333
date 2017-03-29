@@ -1,6 +1,9 @@
 package com.ericwei.project333.data;
 
-import java.util.ArrayList;
+import android.content.Context;
+
+import com.ericwei.project333.R;
+
 import java.util.List;
 
 /**
@@ -9,7 +12,17 @@ import java.util.List;
 
 public class ClothesConstant {
 
-    public List<String> clothesCategory = new ArrayList<>();
+    List<String> clothesCategory;
+    List<String> clothesSubCategory;
 
+    public ClothesConstant(Context context) {
+        String[] category = context.getResources().getStringArray(R.array.clothes_category);
+       //String[] subCategory = context.getResources().getStringArray(R.array.)
+
+    }
+
+    public static void addClothesCategory() {
+
+    }
 
 }

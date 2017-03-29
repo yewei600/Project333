@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.ericwei.project333.clothes_tab.FirstFragment;
+import com.ericwei.project333.profile_tab.SettingsFragment;
 import com.ericwei.project333.wardrobe_tab.WardrobeFragment;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new FirstFragment(), "ONE");
         adapter.addFragment(new WardrobeFragment(), "TWO");
-        adapter.addFragment(new ThreeFragment(), "THREE");
+        adapter.addFragment(new SettingsFragment(), "THREE");
         viewPager.setAdapter(adapter);
     }
 

@@ -38,7 +38,6 @@ public class FirstFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_one, container, false);
         todayCard = (CardView) view.findViewById(R.id.todayCard);
         outfitsCard = (CardView) view.findViewById(R.id.outfitsCard);
-        changeWardrobeCard = (CardView) view.findViewById(R.id.changeWardrobeCard);
         scheduleCard = (CardView) view.findViewById(R.id.scheduleCard);
 
         todayCard.setOnClickListener(new View.OnClickListener() {
@@ -52,13 +51,6 @@ public class FirstFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-            }
-        });
-
-        changeWardrobeCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                changeWardrobeCardClicked();
             }
         });
 
@@ -88,12 +80,8 @@ public class FirstFragment extends Fragment {
 //        Intent intent = new Intent(getContext(), );
 //        startActivity(intent);
 //    }
-//
-    private void changeWardrobeCardClicked() {
-        Intent intent = new Intent(getContext(), ChangeWardrobeActivity.class);
-        startActivity(intent);
-    }
-//
+
+
 //    public void scheduleCardClicked() {
 //        Intent intent = new Intent(getContext(), );
 //        startActivity(intent);

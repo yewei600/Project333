@@ -1,4 +1,4 @@
-package com.ericwei.project333;
+package com.ericwei.project333.profile_tab;
 
 
 import android.os.Bundle;
@@ -8,10 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ericwei.project333.R;
 
-public class ThreeFragment extends Fragment {
 
-    public ThreeFragment() {
+public class SettingsFragment extends Fragment {
+
+    public SettingsFragment() {
     }
 
     @Override

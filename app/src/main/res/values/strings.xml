@@ -7,11 +7,56 @@
     <string name="title_activity_change_wardrobe">ChangeWardrobeActivity</string>
 
     <string-array name="clothes_category">
-        <item>"Tops"</item>
-        <item>"Bottoms"</item>
-        <item>"Shoes"</item>
-        <item>"Dresses"</item>
-        <item>"Accessories"</item>
-        <item>"Outerwear"</item>
+        <item>Tops</item>
+        <item>Bottoms</item>
+        <item>Shoes</item>
+        <item>Dresses</item>
+        <item>Accessories</item>
+        <item>Outerwear</item>
     </string-array>
+
+    <string-array name="tops_subcategory">
+        <item>Blazers</item>
+        <item>Shirts</item>
+        <item>Sweaters</item>
+        <item>T-Shirts</item>
+        <item>Sleeveless</item>
+    </string-array>
+
+    <string-array name="bottoms">
+        <item>Shorts</item>
+        <item>Trousers</item>
+        <item>Skirts</item>
+        <item>Jeans</item>
+    </string-array>
+
+    <string-array name="shoes">
+        <item>Boots</item>
+        <item>Flats</item>
+        <item>Heels</item>
+        <item>Sandals</item>
+    </string-array>
+
+    <string-array name="dresses">
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+        <item></item>
+    </string-array>
+
+    <string-array name="accessories">
+        <item>watches</item>
+        <item>sunglasses</item>
+        <item>belts</item>
+        <item>hats</item>
+        <item>necklaces</item>
+        <item>bracelets</item>
+        <item>rings</item>
+        <item>headbands</item>
+    </string-array>
+
 </resources>

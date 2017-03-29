@@ -10,11 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="?attr/actionBarSize"
         android:duplicateParentState="true"
         android:foreground="@drawable/card_view_selector"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:visibility="visible"
-        app:cardBackgroundColor="@android:color/white"
+        app:cardBackgroundColor="@android:color/holo_red_dark"
         app:cardCornerRadius="4dp"
         app:cardElevation="4dp"
         app:cardPreventCornerOverlap="true"
@@ -30,7 +31,7 @@
             <ExpandableListView
                 android:id="@+id/simple_expandable_listview"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:divider="@color/colorAccent"
                 android:dividerHeight="1dp" />
 
