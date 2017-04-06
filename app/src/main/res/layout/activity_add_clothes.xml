@@ -5,23 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.ericwei.project333.clothes_tab.AddClothesActivity">
+    tools:context="com.ericwei.project333.wardrobe_tab.EditPictureActivity">
 
     <com.lyft.android.scissors.CropView
         android:id="@+id/crop_view"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         app:cropviewViewportRatio="1" />
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-
-
-
-    </LinearLayout>
 
 
     <Button

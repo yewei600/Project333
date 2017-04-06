@@ -15,12 +15,22 @@
         <item>Outerwear</item>
     </string-array>
 
-    <string-array name="tops_subcategory">
+    <string-array name="clothes_subcategory">
+        <item>@array/tops</item>
+        <item>@array/bottoms</item>
+        <item>@array/shoes</item>
+        <item>@array/dresses</item>
+        <item>@array/accessories</item>
+        <item>@array/outerwear</item>
+    </string-array>
+
+    <string-array name="tops">
         <item>Blazers</item>
         <item>Shirts</item>
         <item>Sweaters</item>
         <item>T-Shirts</item>
         <item>Sleeveless</item>
+        <item>Others</item>
     </string-array>
 
     <string-array name="bottoms">
@@ -28,6 +38,7 @@
         <item>Trousers</item>
         <item>Skirts</item>
         <item>Jeans</item>
+        <item>Others</item>
     </string-array>
 
     <string-array name="shoes">
@@ -35,28 +46,31 @@
         <item>Flats</item>
         <item>Heels</item>
         <item>Sandals</item>
+        <item>Others</item>
     </string-array>
 
     <string-array name="dresses">
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
+        <item>Gowns</item>
+        <item>Cocktail Dresses</item>
+        <item>Strapless Dresses</item>
+        <item>Others</item>
     </string-array>
 
     <string-array name="accessories">
-        <item>watches</item>
-        <item>sunglasses</item>
-        <item>belts</item>
-        <item>hats</item>
-        <item>necklaces</item>
-        <item>bracelets</item>
-        <item>rings</item>
-        <item>headbands</item>
+        <item>Watches</item>
+        <item>Sunglasses</item>
+        <item>Belts</item>
+        <item>Hats</item>
+        <item>Necklaces</item>
+        <item>Bracelets</item>
+        <item>Rings</item>
+        <item>Others</item>
+    </string-array>
+
+    <string-array name="outerwear">
+        <item>Jackets</item>
+        <item>Coats</item>
+        <item>Others</item>
     </string-array>
 
 </resources>
