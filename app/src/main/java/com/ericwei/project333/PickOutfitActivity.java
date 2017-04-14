@@ -4,11 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -21,6 +26,7 @@ public class PickOutfitActivity extends AppCompatActivity {
     private String[] categoryNames;
     private static ArrayList<Integer> itemNumbers;
     private OutfitImageAdapter imageAdapter;
+    private Button saveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +37,7 @@ public class PickOutfitActivity extends AppCompatActivity {
 
         listView = (ListView) findViewById(R.id.listView);
         gridView = (GridView) findViewById(R.id.gridView);
+        saveButton = (Button) findViewById(R.id.toolbar_save_button);
 
         categoryNames = getResources().getStringArray(R.array.clothes_category);
 
@@ -47,17 +54,46 @@ public class PickOutfitActivity extends AppCompatActivity {
             }
         });
 
-        //ArrayAdapter<String> gridAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_expandable_list_item_2,)
         imageAdapter = new OutfitImageAdapter(this);
         gridView.setAdapter(imageAdapter);
 
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "SAVE CLICKED!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
+
+    private void saveOutfit() {
+
+    }
+
+    ///////////////////
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.pick_outfit, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_save) {
+            Toast.makeText(getApplicationContext(), "save button clicked", Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
+    ///////////////////
 
     @Override
     protected void onResume() {
         super.onResume();
 
         Log.d(TAG, "len of pickingArray = " + OutfitPickingData.getInstance().getListLength());
-        // imageAdapter.notifyDataSetChanged();
+        imageAdapter.notifyDataSetChanged();
     }
 }

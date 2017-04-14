@@ -1,5 +1,7 @@
 package com.ericwei.project333;
 
+import android.graphics.Bitmap;
+
 import java.util.ArrayList;
 
 /**
@@ -10,11 +12,14 @@ public class OutfitPickingData {
 
     private static ArrayList<Integer> outfitNumbers;
 
+    private static ArrayList<Bitmap> outfitBitmaps;
+
     private static OutfitPickingData singleton = new OutfitPickingData();
 
     private OutfitPickingData() {
         if (outfitNumbers == null) {
             outfitNumbers = new ArrayList<>();
+            outfitBitmaps = new ArrayList<>();
         }
     }
 
@@ -22,12 +27,20 @@ public class OutfitPickingData {
         return singleton;
     }
 
-    public static void appendOutNumber(int num) {
+    public static void appendOutfitNumber(int num) {
         outfitNumbers.add(num);
     }
 
-    public static ArrayList<Integer> getOutfitArrayList() {
+    public static void appendOutfitBitmap(Bitmap bitmap) {
+        outfitBitmaps.add(bitmap);
+    }
+
+    public static ArrayList<Integer> getOutfitNumbers() {
         return outfitNumbers;
+    }
+
+    public static ArrayList<Bitmap> getOutfitBitmaps() {
+        return outfitBitmaps;
     }
 
     public static int getListLength() {

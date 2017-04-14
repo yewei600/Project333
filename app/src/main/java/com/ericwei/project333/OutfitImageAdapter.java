@@ -1,16 +1,11 @@
 package com.ericwei.project333;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.os.AsyncTask;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-
-import com.ericwei.project333.data.ClothesContract;
-
-import java.util.concurrent.ExecutionException;
+import android.widget.LinearLayout;
 
 /**
  * Created by ericwei on 2017-04-13.
@@ -25,7 +20,7 @@ public class OutfitImageAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return OutfitPickingData.getInstance().getOutfitArrayList().size();
+        return OutfitPickingData.getInstance().getOutfitBitmaps().size();
     }
 
     @Override
@@ -42,34 +37,15 @@ public class OutfitImageAdapter extends BaseAdapter {
     public View getView(int i, View view, ViewGroup viewGroup) {
         ImageView imageView;
 
-        try {
-            byte[] imageData = new FetchImageDataTask().execute(OutfitPickingData.getInstance().getOutfitArrayList().get(i)).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
         if (view == null) {
             imageView = new ImageView(context);
-
         } else {
             imageView = (ImageView) view;
         }
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        imageView.setLayoutParams(params);
+
+        imageView.setImageBitmap(OutfitPickingData.getInstance().getOutfitBitmaps().get(i));
         return imageView;
-    }
-
-    public class FetchImageDataTask extends AsyncTask<Integer, Object, byte[]> {
-
-        @Override
-        protected byte[] doInBackground(Integer... integers) {
-            Cursor cursor = context.getContentResolver().query(ClothesContract.ClothesEntry.CONTENT_URI,
-                    null,
-                    ClothesContract.ClothesEntry.COLUMN_ID + " = '" + integers[0] + "'",
-                    null,
-                    ClothesContract.ClothesEntry.COLUMN_CATEGORY);
-
-            return cursor.getBlob(cursor.getColumnIndex(ClothesContract.ClothesEntry.COLUMN_IMAGE));
-        }
     }
 }

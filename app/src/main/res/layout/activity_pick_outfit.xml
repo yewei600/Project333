@@ -4,8 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="2"
+    android:weightSum="3"
     tools:context="com.ericwei.project333.PickOutfitActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/saveOutfit_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp">
+
+        <Button
+            android:id="@+id/toolbar_save_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="300dp"
+            android:text="SAVE" />
+
+    </android.support.v7.widget.Toolbar>
 
     <ListView
         android:id="@+id/listView"
@@ -17,7 +33,7 @@
         android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:numColumns="3"></GridView>
 
 </LinearLayout>
