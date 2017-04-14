@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.getTabAt(0).setText("Clothes");
+        tabLayout.getTabAt(0).setText("Item");
         tabLayout.getTabAt(1).setText("26/33");
         tabLayout.getTabAt(2).setText("Settings");
     }

@@ -1,6 +1,5 @@
 package com.ericwei.project333.wardrobe_tab;
 
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,8 +18,15 @@ public class CategoryCardsAdapter extends RecyclerView.Adapter<CategoryCardsAdap
 
     private final List<String> categoryItems;
 
-    public CategoryCardsAdapter(List<String> categoryItems) {
+    private CategoryCardClickListener clickListener;
+
+    public interface CategoryCardClickListener {
+        void onItemClick(int cardIndex);
+    }
+
+    public CategoryCardsAdapter(List<String> categoryItems, CategoryCardClickListener listener) {
         this.categoryItems = categoryItems;
+        this.clickListener = listener;
     }
 
     @Override
@@ -32,6 +38,7 @@ public class CategoryCardsAdapter extends RecyclerView.Adapter<CategoryCardsAdap
     @Override
     public void onBindViewHolder(CategoryCardsAdapter.ViewHolder holder, int position) {
         holder.categoryName.setText(categoryItems.get(position));
+        holder.numItems.setText("");
     }
 
     @Override
@@ -39,21 +46,21 @@ public class CategoryCardsAdapter extends RecyclerView.Adapter<CategoryCardsAdap
         return categoryItems.size();
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(String tvText);
-    }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public CardView cardView;
-        public TextView categoryName;
-        private OnItemClickListener listener;
-
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private TextView categoryName;
+        private TextView numItems;
 
         public ViewHolder(View itemView) {
             super(itemView);
             categoryName = (TextView) itemView.findViewById(R.id.category_title);
+            numItems = (TextView) itemView.findViewById(R.id.num_items);
+            itemView.setOnClickListener(this);
         }
 
-
+        @Override
+        public void onClick(View view) {
+            clickListener.onItemClick(getAdapterPosition());
+        }
     }
 }

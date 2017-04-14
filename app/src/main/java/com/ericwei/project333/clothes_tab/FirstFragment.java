@@ -1,15 +1,23 @@
 package com.ericwei.project333.clothes_tab;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.ericwei.project333.ClothesImagesActivity;
+import com.ericwei.project333.PickOutfitActivity;
 import com.ericwei.project333.R;
+import com.ericwei.project333.ViewOutfitActivity;
 
 /**
  * Created by ericwei on 2017-03-19.
@@ -21,8 +29,6 @@ public class FirstFragment extends Fragment {
 
     CardView todayCard;
     CardView outfitsCard;
-    CardView changeWardrobeCard;
-    CardView scheduleCard;
 
     public FirstFragment() {
     }
@@ -38,7 +44,6 @@ public class FirstFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_one, container, false);
         todayCard = (CardView) view.findViewById(R.id.todayCard);
         outfitsCard = (CardView) view.findViewById(R.id.outfitsCard);
-        scheduleCard = (CardView) view.findViewById(R.id.scheduleCard);
 
         todayCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,14 +55,7 @@ public class FirstFragment extends Fragment {
         outfitsCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-            }
-        });
-
-        scheduleCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
+                outfitsCardClicked();
             }
         });
 
@@ -72,18 +70,41 @@ public class FirstFragment extends Fragment {
 
 
     private void todayCardClicked() {
-        Intent intent = new Intent(getContext(), TodayOutfitActivity.class);
-        startActivity(intent);
+        //check here if today's outfit exists or not
+        SharedPreferences sharedPrefs = getContext().getSharedPreferences("today", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor;
+        if (!sharedPrefs.contains("outfit")) {
+            Toast.makeText(getContext(), "Today's outfit don't exist!", Toast.LENGTH_SHORT).show();
+
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Pick Today's Outfit")
+                    .setMessage("New Outfit or Saved Outfit?")
+                    .setNegativeButton("new outfit", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent = new Intent(getContext(), PickOutfitActivity.class);
+                            startActivity(intent);
+                        }
+                    })
+                    .setPositiveButton("saved outfits", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent = new Intent(getContext(), SavedOutfitsActivity.class);
+                            startActivity(intent);
+                        }
+                    })
+                    .show();
+
+        } else {
+            Toast.makeText(getContext(), "Exists!!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getContext(), ViewOutfitActivity.class);
+            startActivity(intent);
+        }
+
     }
 
-    //    public void outfitsCardClicked() {
-//        Intent intent = new Intent(getContext(), );
-//        startActivity(intent);
-//    }
-
-
-//    public void scheduleCardClicked() {
-//        Intent intent = new Intent(getContext(), );
-//        startActivity(intent);
-//    }
+    public void outfitsCardClicked() {
+        Intent intent = new Intent(getContext(), ClothesImagesActivity.class);
+        startActivity(intent);
+    }
 }

@@ -21,7 +21,7 @@ public class EditPictureActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_clothes);
+        setContentView(R.layout.activity_edit_picture);
 
         cropView = (CropView) findViewById(R.id.crop_view);
         submitButton = (Button) findViewById(R.id.submit);
@@ -36,6 +36,7 @@ public class EditPictureActivity extends AppCompatActivity {
             public void onClick(View view) {
                 try {
                     Intent intent = new Intent(EditPictureActivity.this, WardrobeExpandableListActivity.class);
+                    intent.putExtra("Image", itemImage);
                     startActivity(intent);
 
                 } catch (Exception e) {
@@ -44,8 +45,5 @@ public class EditPictureActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
 
 }

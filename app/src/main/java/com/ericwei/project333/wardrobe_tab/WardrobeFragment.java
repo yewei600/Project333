@@ -13,7 +13,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.ericwei.project333.ClothesImagesActivity;
 import com.ericwei.project333.R;
 
 import java.util.ArrayList;
@@ -21,7 +23,7 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
-public class WardrobeFragment extends Fragment {
+public class WardrobeFragment extends Fragment implements CategoryCardsAdapter.CategoryCardClickListener {
 
     private static final String TAG = WardrobeFragment.class.getSimpleName();
 
@@ -30,7 +32,6 @@ public class WardrobeFragment extends Fragment {
     private CategoryCardsAdapter adapter;
     private List<String> categoryList;
     private String categoryArray[];
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,10 +60,9 @@ public class WardrobeFragment extends Fragment {
         recyclerView.setLayoutManager(gridLayoutManager);
 
         if (categoryList.size() > 0 && recyclerView != null) {
-            adapter = new CategoryCardsAdapter(categoryList);
+            adapter = new CategoryCardsAdapter(categoryList, this);
             recyclerView.setAdapter(adapter);
         }
-
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -91,4 +91,12 @@ public class WardrobeFragment extends Fragment {
         }
     }
 
+
+    @Override
+    public void onItemClick(int cardIndex) {
+        Toast.makeText(getContext(), categoryList.get(cardIndex) + " clicked", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getContext(), ClothesImagesActivity.class);
+        intent.putExtra("category", categoryArray[cardIndex]);
+        startActivity(intent);
+    }
 }

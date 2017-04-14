@@ -34,7 +34,11 @@
             android:exported="false" />
 
         <activity android:name=".clothes_tab.PickClothesCategoryActivity" />
-        <activity android:name=".wardrobe_tab.WardrobeExpandableListActivity"></activity>
+        <activity android:name=".wardrobe_tab.WardrobeExpandableListActivity" />
+        <activity android:name=".ClothesImagesActivity" />
+        <activity android:name=".PickOutfitActivity" />
+        <activity android:name=".clothes_tab.SavedOutfitsActivity" />
+        <activity android:name=".ViewOutfitActivity"></activity>
     </application>
 
 </manifest>

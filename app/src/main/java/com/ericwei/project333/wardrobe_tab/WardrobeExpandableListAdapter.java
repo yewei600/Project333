@@ -13,13 +13,13 @@ import com.ericwei.project333.R;
  * Created by ericwei on 2017-04-03.
  */
 
-public class CategoryExpandableListAdapter extends BaseExpandableListAdapter {
+public class WardrobeExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     String[] listTitles;
     String[][] listDetails;
 
-    public CategoryExpandableListAdapter(Context context, String[] listTitles, String[][] listDetails) {
+    public WardrobeExpandableListAdapter(Context context, String[] listTitles, String[][] listDetails) {
         this.context = context;
         this.listTitles = listTitles;
         this.listDetails = listDetails;

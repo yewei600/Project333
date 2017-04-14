@@ -1,6 +1,7 @@
 package com.ericwei.project333.wardrobe_tab;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.DatabaseUtils;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
+import com.ericwei.project333.MainActivity;
 import com.ericwei.project333.R;
 import com.ericwei.project333.data.ClothesContract;
 import com.ericwei.project333.data.ClothesDbHelper;
@@ -24,10 +26,11 @@ public class WardrobeExpandableListActivity extends AppCompatActivity {
 
     private static final String TAG = WardrobeExpandableListActivity.class.getSimpleName();
 
-    private CategoryExpandableListAdapter listAdapter;
+    private WardrobeExpandableListAdapter listAdapter;
     private ExpandableListView expandableListView;
     private String[] listTitles;
     private String[][] listDetails;
+    private Bitmap itemImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,16 +39,24 @@ public class WardrobeExpandableListActivity extends AppCompatActivity {
 
         populateListContent();
 
-        listAdapter = new CategoryExpandableListAdapter(this, listTitles, listDetails);
+        final Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        itemImage = (Bitmap) bundle.get("Image");
 
+        listAdapter = new WardrobeExpandableListAdapter(this, listTitles, listDetails);
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
         expandableListView.setAdapter(listAdapter);
 
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
-                Toast.makeText(getApplicationContext(), listDetails[i][i1] + " clicked", Toast.LENGTH_SHORT).show();
-                return false;
+                saveItem(listTitles[i], listDetails[i][i1]);
+
+                Intent intent1 = new Intent(WardrobeExpandableListActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent1);
+                finish();
+                return true;
             }
         });
 
@@ -77,17 +88,17 @@ public class WardrobeExpandableListActivity extends AppCompatActivity {
         return byteArray;
     }
 
-    private void saveItem() {
+    private void saveItem(String category, String subcategory) {
         ContentValues contentValues = new ContentValues();
         long itemNumber = getDatabaseRowCount() + 1;
-        contentValues.put(ClothesContract.ClothesEntry.COLUMN_CATEGORY, "tops");
-        contentValues.put(ClothesContract.ClothesEntry.COLUMN_SUBCATEGORY, "shirt");
-        // contentValues.put(ClothesContract.ClothesEntry.COLUMN_IMAGE, imageToByte(itemImage));
+        contentValues.put(ClothesContract.ClothesEntry.COLUMN_CATEGORY, category);
+        contentValues.put(ClothesContract.ClothesEntry.COLUMN_SUBCATEGORY, subcategory);
+        contentValues.put(ClothesContract.ClothesEntry.COLUMN_IMAGE, imageToByte(itemImage));
         contentValues.put(ClothesContract.ClothesEntry.COLUMN_ID, itemNumber);
 
         Uri uri = getContentResolver().insert(ClothesContract.ClothesEntry.CONTENT_URI, contentValues);
         if (uri != null) {
-            Toast.makeText(this, "Added clothes item number" + itemNumber, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Added clothes " + category + " " + subcategory + " " + itemNumber, Toast.LENGTH_SHORT).show();
         }
     }
 
