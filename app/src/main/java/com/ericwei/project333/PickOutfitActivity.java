@@ -3,29 +3,29 @@ package com.ericwei.project333;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.ericwei.project333.data.Item;
+
 import java.util.ArrayList;
 
-public class PickOutfitActivity extends AppCompatActivity {
+public class PickOutfitActivity extends AppCompatActivity implements PickedOutfitImageAdapter.ItemCardClickListener {
 
     private static final String TAG = PickOutfitActivity.class.getSimpleName();
 
     private ListView listView;
-    private GridView gridView;
+    private RecyclerView recyclerView;
     private String[] categoryNames;
     private static ArrayList<Integer> itemNumbers;
-    private OutfitImageAdapter imageAdapter;
+    private PickedOutfitImageAdapter imageAdapter;
     private Button saveButton;
 
     @Override
@@ -36,7 +36,7 @@ public class PickOutfitActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pick_outfit);
 
         listView = (ListView) findViewById(R.id.listView);
-        gridView = (GridView) findViewById(R.id.gridView);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerview_pick_outfit);
         saveButton = (Button) findViewById(R.id.toolbar_save_button);
 
         categoryNames = getResources().getStringArray(R.array.clothes_category);
@@ -54,8 +54,10 @@ public class PickOutfitActivity extends AppCompatActivity {
             }
         });
 
-        imageAdapter = new OutfitImageAdapter(this);
-        gridView.setAdapter(imageAdapter);
+        imageAdapter = new PickedOutfitImageAdapter(this, this);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(imageAdapter);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,30 +72,16 @@ public class PickOutfitActivity extends AppCompatActivity {
 
     }
 
-    ///////////////////
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.pick_outfit, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_save) {
-            Toast.makeText(getApplicationContext(), "save button clicked", Toast.LENGTH_SHORT).show();
-        }
-        return super.onOptionsItemSelected(item);
-
-    }
-    ///////////////////
-
     @Override
     protected void onResume() {
         super.onResume();
 
         Log.d(TAG, "len of pickingArray = " + OutfitPickingData.getInstance().getListLength());
-        imageAdapter.notifyDataSetChanged();
+        imageAdapter.setItemData(OutfitPickingData.getInstance().getOutfitItems());
+    }
+
+    @Override
+    public void onItemClick(Item item) {
+
     }
 }

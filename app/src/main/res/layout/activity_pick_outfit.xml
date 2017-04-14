@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="3"
+    android:weightSum="2"
     tools:context="com.ericwei.project333.PickOutfitActivity">
 
     <android.support.v7.widget.Toolbar
@@ -29,11 +29,10 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"></ListView>
 
-    <GridView
-        android:id="@+id/gridView"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview_pick_outfit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:numColumns="3"></GridView>
+        android:layout_weight="1" />
 
 </LinearLayout>
