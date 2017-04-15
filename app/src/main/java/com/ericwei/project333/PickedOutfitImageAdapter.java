@@ -1,81 +1,52 @@
 package com.ericwei.project333;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
-
-import com.ericwei.project333.data.Item;
-
-import java.util.ArrayList;
+import android.widget.LinearLayout;
 
 /**
  * Created by ericwei on 2017-04-13.
  */
 
-public class PickedOutfitImageAdapter extends RecyclerView.Adapter<PickedOutfitImageAdapter.ImageViewHolder> {
+public class PickedOutfitImageAdapter extends BaseAdapter {
 
-    private static final String TAG = PickedOutfitImageAdapter.class.getSimpleName();
-
-    private ArrayList<Item> clothesItems;
-    private ItemCardClickListener clickListener;
     private Context context;
 
-    public interface ItemCardClickListener {
-        void onItemClick(Item item);
-    }
-
-    public PickedOutfitImageAdapter(ItemCardClickListener clickListener, Context context) {
-        this.clickListener = clickListener;
+    public PickedOutfitImageAdapter(Context context) {
         this.context = context;
     }
 
     @Override
-    public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        boolean shouldAttachToParentImmediately = false;
-
-        View view = inflater.inflate(R.layout.pick_outfit_card, parent, shouldAttachToParentImmediately);
-        return new ImageViewHolder(view);
+    public int getCount() {
+        return OutfitPickingData.getInstance().getOutfitBitmaps().size();
     }
 
     @Override
-    public void onBindViewHolder(ImageViewHolder holder, int position) {
-        Log.d(TAG, "onBindViewHolder()");
-        holder.bind(position);
+    public Object getItem(int i) {
+        return null;
     }
 
     @Override
-    public int getItemCount() {
-        return clothesItems.size();
+    public long getItemId(int i) {
+        return 0;
     }
 
-    public void setItemData(ArrayList<Item> itemData) {
-        clothesItems = itemData;
-        Log.d(TAG, "clothesItems length==" + clothesItems.size());
-        notifyDataSetChanged();
-    }
+    @Override
+    public View getView(int i, View view, ViewGroup viewGroup) {
+        ImageView imageView;
 
-    public class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        private ImageView itemView;
-
-        public ImageViewHolder(View itemView) {
-            super(itemView);
-            this.itemView = (ImageView) itemView.findViewById(R.id.iv_item_image);
-            this.itemView.setOnClickListener(this);
+        if (view == null) {
+            imageView = new ImageView(context);
+        } else {
+            imageView = (ImageView) view;
         }
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        imageView.setLayoutParams(params);
 
-        @Override
-        public void onClick(View view) {
-            clickListener.onItemClick(clothesItems.get(getAdapterPosition()));
-        }
-
-        void bind(int position) {
-            itemView.setImageBitmap(clothesItems.get(position).getItemImage());
-        }
+        imageView.setImageBitmap(OutfitPickingData.getInstance().getOutfitBitmaps().get(i));
+        return imageView;
     }
 }

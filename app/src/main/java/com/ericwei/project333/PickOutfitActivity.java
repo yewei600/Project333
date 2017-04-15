@@ -30,7 +30,7 @@ public class PickOutfitActivity extends AppCompatActivity {
     private GridView gridView;
     private String[] categoryNames;
     private static ArrayList<Integer> itemNumbers;
-    private OutfitImageAdapter imageAdapter;
+    private PickedOutfitImageAdapter imageAdapter;
     private Button saveButton;
 
     @Override
@@ -59,7 +59,7 @@ public class PickOutfitActivity extends AppCompatActivity {
             }
         });
 
-        imageAdapter = new OutfitImageAdapter(this);
+        imageAdapter = new PickedOutfitImageAdapter(this);
         gridView.setAdapter(imageAdapter);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -136,6 +136,8 @@ public class PickOutfitActivity extends AppCompatActivity {
         } else {
             Log.d(TAG, "outfit not saved");
         }
+        OutfitPickingData.getInstance().getOutfitNumbers().clear();
+        OutfitPickingData.getInstance().getOutfitBitmaps().clear();
         finish();
     }
 

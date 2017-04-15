@@ -29,10 +29,10 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"></ListView>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview_pick_outfit"
+    <GridView
+        android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
-
+        android:layout_weight="2"
+        android:numColumns="3"></GridView>
 </LinearLayout>

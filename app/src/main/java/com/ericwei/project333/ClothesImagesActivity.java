@@ -101,7 +101,8 @@ public class ClothesImagesActivity extends AppCompatActivity implements ImageAda
         Log.d(TAG, "in onItemClick!!()");
         Toast.makeText(this, "clicked item number " + item.getId(), Toast.LENGTH_SHORT).show();
         if (isSelectingItems) {
-            OutfitPickingData.getInstance().appendOutfitItems(item);
+            OutfitPickingData.getInstance().appendOutfitNumber(item.getId());
+            OutfitPickingData.getInstance().appendOutfitBitmap(item.getItemImage());
             Toast.makeText(getApplicationContext(), "tapped!!!", Toast.LENGTH_SHORT).show();
         }
     }
