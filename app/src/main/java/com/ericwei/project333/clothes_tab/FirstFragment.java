@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.ericwei.project333.PickOutfitActivity;
 import com.ericwei.project333.R;
 import com.ericwei.project333.ViewOutfitActivity;
+import com.ericwei.project333.data.OutfitDbHelper;
 
 /**
  * Created by ericwei on 2017-03-19.
@@ -70,9 +72,12 @@ public class FirstFragment extends Fragment {
 
     private void todayCardClicked() {
         //check here if today's outfit exists or not
-        SharedPreferences sharedPrefs = getContext().getSharedPreferences("today", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor;
-        if (!sharedPrefs.contains("outfit")) {
+        SharedPreferences sharedPrefs = getContext().getSharedPreferences("todayOutfit", Context.MODE_PRIVATE);
+        if (sharedPrefs.getBoolean("today", false)) {
+            Toast.makeText(getContext(), "Exists!!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getContext(), ViewOutfitActivity.class);
+            startActivity(intent);
+        } else {
             Toast.makeText(getContext(), "Today's outfit don't exist!", Toast.LENGTH_SHORT).show();
 
             new AlertDialog.Builder(getContext())
@@ -82,6 +87,7 @@ public class FirstFragment extends Fragment {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             Intent intent = new Intent(getContext(), PickOutfitActivity.class);
+                            intent.putExtra("pickingtodaynew", true);
                             startActivity(intent);
                         }
                     })
@@ -89,17 +95,26 @@ public class FirstFragment extends Fragment {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             Intent intent = new Intent(getContext(), SavedOutfitsActivity.class);
+                            intent.putExtra("pickingtoday", true);
                             startActivity(intent);
                         }
                     })
                     .show();
-
-        } else {
-            Toast.makeText(getContext(), "Exists!!", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(getContext(), ViewOutfitActivity.class);
-            startActivity(intent);
         }
 
+    }
+
+    private boolean doesTodayOutfitExist() {
+        OutfitDbHelper helper = new OutfitDbHelper(getContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+//        Cursor cursor = db.query(OutfitContract.OutfitEntry.TABLE_NAME,
+//                new String[]{OutfitContract.OutfitEntry.COLUMN_NAME},
+//                null,
+//                OutfitContract.OutfitEntry.COLUMN_NAME + "=?",
+//                new String[]{"today"}
+//        );
+        return false;
     }
 
     public void outfitsCardClicked() {

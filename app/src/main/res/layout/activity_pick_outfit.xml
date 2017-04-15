@@ -14,13 +14,6 @@
         android:background="?attr/colorPrimary"
         android:elevation="4dp">
 
-        <Button
-            android:id="@+id/toolbar_save_button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="320dp"
-            android:text="SAVE" />
-
     </android.support.v7.widget.Toolbar>
 
     <ListView

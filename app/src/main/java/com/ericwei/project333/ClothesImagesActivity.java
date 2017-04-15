@@ -11,7 +11,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.ericwei.project333.data.ClothesContract;
@@ -27,6 +31,8 @@ public class ClothesImagesActivity extends AppCompatActivity implements ImageAda
     private int[] itemIDs;
     private boolean isSelectingItems;
     private boolean showingSavedOutfitItems;
+    private boolean isSelectingTodaysOutfit;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +51,13 @@ public class ClothesImagesActivity extends AppCompatActivity implements ImageAda
         category = intent.getStringExtra("category");
         isSelectingItems = intent.getBooleanExtra("selecting", false);
         showingSavedOutfitItems = intent.getBooleanExtra("showingSavedOutfit", false);
+        isSelectingTodaysOutfit = intent.getBooleanExtra("selectingTodayOutfit", false);
+
+//        if (isSelectingTodaysOutfit) {
+//            toolbar = (Toolbar) findViewById(R.id.save_today_outfit_toolbar);
+//            setSupportActionBar(toolbar);
+//            getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        }
 
         //grab the images data
         if (!showingSavedOutfitItems) {
@@ -56,15 +69,6 @@ public class ClothesImagesActivity extends AppCompatActivity implements ImageAda
     }
 
     private void getItemsByItemIDs(int[] itemIDs) {
-
-        Cursor cursor = getContentResolver().query(ClothesContract.ClothesEntry.CONTENT_URI,
-                null,
-                null,
-                null,
-                ClothesContract.ClothesEntry.COLUMN_CATEGORY);
-
-        cursor.moveToFirst();
-
         //initializing the items array to the right length
         for (int i = 0; i < itemIDs.length; i++) {
             if (itemIDs[i] == 0) {
@@ -74,21 +78,25 @@ public class ClothesImagesActivity extends AppCompatActivity implements ImageAda
         }
 
         int j = 0;
+        //querying each clothes item
+        for (int i = 0; i < itemIDs.length; i++) {
+            if (itemIDs[i] > 0) {
+                Cursor cursor = getContentResolver().query(ClothesContract.ClothesEntry.CONTENT_URI,
+                        null,
+                        ClothesContract.ClothesEntry.COLUMN_ID + " = '" + itemIDs[i] + "'",
+                        null,
+                        null);
 
-        //this logic has problem!!!!!  HOW I AM SEARCHING THE items(which are not sorted), against the cursor that points to items.
-        for (int i = 0; i < cursor.getCount(); i++) {
-            if (itemIDs[j] > 0) {
-                if (cursor.getInt(cursor.getColumnIndex(ClothesContract.ClothesEntry.COLUMN_ID)) == itemIDs[j]) {
-                    byte[] imageBytes = cursor.getBlob(cursor.getColumnIndex(ClothesContract.ClothesEntry.COLUMN_IMAGE));
+                cursor.moveToFirst();
+                byte[] imageBytes = cursor.getBlob(cursor.getColumnIndex(ClothesContract.ClothesEntry.COLUMN_IMAGE));
 
-                    items[j] = new Item(cursor.getString(cursor.getColumnIndex(ClothesContract.ClothesEntry.COLUMN_CATEGORY)),
-                            cursor.getString(cursor.getColumnIndex(ClothesContract.ClothesEntry.COLUMN_SUBCATEGORY)),
-                            BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length),
-                            cursor.getInt(cursor.getColumnIndex(ClothesContract.ClothesEntry.COLUMN_ID))
-                    );
-                    j++;
-                }
-                cursor.moveToNext();
+                items[j] = new Item(cursor.getString(cursor.getColumnIndex(ClothesContract.ClothesEntry.COLUMN_CATEGORY)),
+                        cursor.getString(cursor.getColumnIndex(ClothesContract.ClothesEntry.COLUMN_SUBCATEGORY)),
+                        BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length),
+                        cursor.getInt(cursor.getColumnIndex(ClothesContract.ClothesEntry.COLUMN_ID)));
+
+                cursor.close();
+                j++;
             } else {
                 break;
             }
@@ -191,5 +199,22 @@ public class ClothesImagesActivity extends AppCompatActivity implements ImageAda
 //
 //        }
 //    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.clothes_images_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_select_for_today) {
+            Toast.makeText(getApplicationContext(), "select for today!!", Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 }

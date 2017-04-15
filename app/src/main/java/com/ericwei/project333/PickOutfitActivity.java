@@ -1,14 +1,20 @@
 package com.ericwei.project333;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -32,6 +38,8 @@ public class PickOutfitActivity extends AppCompatActivity {
     private static ArrayList<Integer> itemNumbers;
     private PickedOutfitImageAdapter imageAdapter;
     private Button saveButton;
+    private Toolbar toolbar;
+    private boolean pickingTodayOutfit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +50,10 @@ public class PickOutfitActivity extends AppCompatActivity {
 
         listView = (ListView) findViewById(R.id.listView);
         gridView = (GridView) findViewById(R.id.gridView);
-        saveButton = (Button) findViewById(R.id.toolbar_save_button);
+
+        toolbar = (Toolbar) findViewById(R.id.saveOutfit_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         categoryNames = getResources().getStringArray(R.array.clothes_category);
 
@@ -62,29 +73,8 @@ public class PickOutfitActivity extends AppCompatActivity {
         imageAdapter = new PickedOutfitImageAdapter(this);
         gridView.setAdapter(imageAdapter);
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(PickOutfitActivity.this);
-                LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-                View dialogView = inflater.inflate(R.layout.edittext_dialog, null);
-                builder.setView(dialogView);
-
-                final EditText editText = (EditText) dialogView.findViewById(R.id.et_dialog);
-                builder.setMessage("Enter Outfit name below:");
-                builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        saveOutfit(editText.getText().toString());
-                    }
-                });
-                builder.setNegativeButton("Cancel", null);
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
-        });
-
+        Intent intent = getIntent();
+        pickingTodayOutfit = intent.getBooleanExtra("pickingtodaynew", false);
     }
 
     private void saveOutfit(String outfitName) {
@@ -132,7 +122,7 @@ public class PickOutfitActivity extends AppCompatActivity {
         }
         long id = db.insert(OutfitContract.OutfitEntry.TABLE_NAME, null, contentValues);
         if (id > 0) {
-            Log.d(TAG, "outfit saved successful!");
+            Log.d(TAG, "saved successful! outfit== " + outfitName);
         } else {
             Log.d(TAG, "outfit not saved");
         }
@@ -141,24 +131,60 @@ public class PickOutfitActivity extends AppCompatActivity {
         finish();
     }
 
-//    ///////////////////
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.pick_outfit, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//        if (id == R.id.action_save) {
-//            Toast.makeText(getApplicationContext(), "save button clicked", Toast.LENGTH_SHORT).show();
-//        }
-//        return super.onOptionsItemSelected(item);
-//
-//    }
-//    ///////////////////
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.pick_outfit_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_save) {
+            if (pickingTodayOutfit) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(PickOutfitActivity.this);
+
+                builder.setTitle("Use this outfit for today?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        saveOutfit("today");
+                        SharedPreferences sharedPreferences = getSharedPreferences("todayOutfit", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("today", true);
+                        editor.commit();
+                    }
+                });
+                builder.setNegativeButton("No", null);
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            } else {
+                //else?
+                AlertDialog.Builder builder = new AlertDialog.Builder(PickOutfitActivity.this);
+                LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+                View dialogView = inflater.inflate(R.layout.edittext_dialog, null);
+                builder.setView(dialogView);
+
+                final EditText editText = (EditText) dialogView.findViewById(R.id.et_dialog);
+                builder.setMessage("Enter Outfit name below:");
+                builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        saveOutfit(editText.getText().toString());
+                    }
+                });
+                builder.setNegativeButton("Cancel", null);
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
 
     @Override
     protected void onResume() {
