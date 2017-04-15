@@ -24,7 +24,9 @@ public class ClothesImagesActivity extends AppCompatActivity implements ImageAda
     private ImageAdapter imageAdapter;
     private String category;
     private Item[] items;
+    private int[] itemIDs;
     private boolean isSelectingItems;
+    private boolean showingSavedOutfitItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +44,56 @@ public class ClothesImagesActivity extends AppCompatActivity implements ImageAda
         Intent intent = getIntent();
         category = intent.getStringExtra("category");
         isSelectingItems = intent.getBooleanExtra("selecting", false);
+        showingSavedOutfitItems = intent.getBooleanExtra("showingSavedOutfit", false);
 
         //grab the images data
-        new FetchItemsDataTask().execute();
+        if (!showingSavedOutfitItems) {
+            new FetchItemsDataTask().execute();
+        } else {
+            itemIDs = intent.getIntArrayExtra("itemids");
+            getItemsByItemIDs(itemIDs);
+        }
+    }
+
+    private void getItemsByItemIDs(int[] itemIDs) {
+
+        Cursor cursor = getContentResolver().query(ClothesContract.ClothesEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                ClothesContract.ClothesEntry.COLUMN_CATEGORY);
+
+        cursor.moveToFirst();
+
+        //initializing the items array to the right length
+        for (int i = 0; i < itemIDs.length; i++) {
+            if (itemIDs[i] == 0) {
+                items = new Item[i];
+                break;
+            }
+        }
+
+        int j = 0;
+
+        //this logic has problem!!!!!  HOW I AM SEARCHING THE items(which are not sorted), against the cursor that points to items.
+        for (int i = 0; i < cursor.getCount(); i++) {
+            if (itemIDs[j] > 0) {
+                if (cursor.getInt(cursor.getColumnIndex(ClothesContract.ClothesEntry.COLUMN_ID)) == itemIDs[j]) {
+                    byte[] imageBytes = cursor.getBlob(cursor.getColumnIndex(ClothesContract.ClothesEntry.COLUMN_IMAGE));
+
+                    items[j] = new Item(cursor.getString(cursor.getColumnIndex(ClothesContract.ClothesEntry.COLUMN_CATEGORY)),
+                            cursor.getString(cursor.getColumnIndex(ClothesContract.ClothesEntry.COLUMN_SUBCATEGORY)),
+                            BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length),
+                            cursor.getInt(cursor.getColumnIndex(ClothesContract.ClothesEntry.COLUMN_ID))
+                    );
+                    j++;
+                }
+                cursor.moveToNext();
+            } else {
+                break;
+            }
+        }
+        imageAdapter.setItemData(items);
     }
 
     @Override
@@ -60,7 +109,6 @@ public class ClothesImagesActivity extends AppCompatActivity implements ImageAda
     @Override
     protected void onPause() {
         super.onPause();
-
     }
 
     public class FetchItemsDataTask extends AsyncTask<Object, Object, Cursor> {
@@ -81,7 +129,6 @@ public class ClothesImagesActivity extends AppCompatActivity implements ImageAda
 
         @Override
         protected Cursor doInBackground(Object... voids) {
-
             return getContentResolver().query(ClothesContract.ClothesEntry.CONTENT_URI,
                     null,
                     ClothesContract.ClothesEntry.COLUMN_CATEGORY + " = '" + category + "'",
@@ -119,5 +166,29 @@ public class ClothesImagesActivity extends AppCompatActivity implements ImageAda
             super.onPostExecute(itemCursor);
         }
     }
+
+//    public class FetchItemByItemIDsTask extends AsyncTask<int[], Object, Item[]> {
+//
+//        @Override
+//        protected Item[] doInBackground(Integer[]... integers) {
+//
+//            Cursor cursor = getContentResolver().query(ClothesContract.ClothesEntry.CONTENT_URI,
+//                    null,
+//                    null,
+//                    null,
+//                    ClothesContract.ClothesEntry.COLUMN_CATEGORY);
+//
+//            cursor.moveToFirst();
+//            int j = 0;
+//            for (int i = 0; i < cursor.getCount(); i++) {
+//                if (cursor.getInt(cursor.getColumnIndex(ClothesContract.ClothesEntry.COLUMN_ID)) == integers[j])
+//            }
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Item[] items) {
+//
+//        }
+//    }
 
 }

@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.ericwei.project333.ClothesImagesActivity;
 import com.ericwei.project333.PickOutfitActivity;
 import com.ericwei.project333.R;
 import com.ericwei.project333.ViewOutfitActivity;
@@ -104,7 +103,7 @@ public class FirstFragment extends Fragment {
     }
 
     public void outfitsCardClicked() {
-        Intent intent = new Intent(getContext(), ClothesImagesActivity.class);
+        Intent intent = new Intent(getContext(), SavedOutfitsActivity.class);
         startActivity(intent);
     }
 }

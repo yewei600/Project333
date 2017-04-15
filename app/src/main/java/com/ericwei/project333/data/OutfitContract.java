@@ -18,7 +18,7 @@ public class OutfitContract {
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon()
                 .appendPath(PATH_OUTFIT).build();
 
-        public static final String TABLE_NAME = "clothes";
+        public static final String TABLE_NAME = "outfit";
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_OUTFIT1 = "outfit1";
         public static final String COLUMN_OUTFIT2 = "outfit2";
