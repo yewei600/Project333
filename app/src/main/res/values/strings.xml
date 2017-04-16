@@ -5,6 +5,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_today_outfit">TodayOutfitActivity</string>
     <string name="title_activity_change_wardrobe">ChangeWardrobeActivity</string>
+    <string name="action_item_added">com.ericwei.project333.ITEM_ADDED</string>
 
     <string-array name="clothes_category">
         <item>Tops</item>

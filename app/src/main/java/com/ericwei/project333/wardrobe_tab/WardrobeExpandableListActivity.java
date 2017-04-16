@@ -52,9 +52,13 @@ public class WardrobeExpandableListActivity extends AppCompatActivity {
             public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
                 saveItem(listTitles[i], listDetails[i][i1]);
 
-                Intent intent1 = new Intent(WardrobeExpandableListActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intent1);
+                //send broadcast intent to update item count
+                Intent intent1 = new Intent(getString(R.string.action_item_added));
+                sendBroadcast(intent1);
+
+                Intent intent2 = new Intent(WardrobeExpandableListActivity.this, MainActivity.class);
+                intent2.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent2);
                 finish();
                 return true;
             }

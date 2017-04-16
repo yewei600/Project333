@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.ericwei.project333.ClothesImagesActivity;
 import com.ericwei.project333.PickOutfitActivity;
@@ -39,6 +40,7 @@ public class SavedOutfitsActivity extends AppCompatActivity {
     private String[] outfitNames;
     private Toolbar toolbar;
     private ArrayAdapter<String> listAdapter;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +54,7 @@ public class SavedOutfitsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         pickingTodaysOutfit = intent.getBooleanExtra("pickingtoday", false);
 
-        ListView listView = (ListView) findViewById(R.id.outfits_list);
+        listView = (ListView) findViewById(R.id.outfits_list);
         outfitNames = getSavedOutfits();
 
         listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, outfitNames);
@@ -86,6 +88,43 @@ public class SavedOutfitsActivity extends AppCompatActivity {
                 }
             }
         });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int clickIndex, long l) {
+
+                if (!pickingTodaysOutfit) {
+                    new AlertDialog.Builder(SavedOutfitsActivity.this)
+                            .setTitle("Delete this outfit?")
+                            .setNegativeButton("No", null)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Toast.makeText(getApplicationContext(), "Delete outfit " + outfitNames[clickIndex] + " ?", Toast.LENGTH_SHORT).show();
+                                    deleteSelectedOutfit(clickIndex);
+                                }
+                            })
+                            .show();
+                }
+                return true;
+            }
+        });
+    }
+
+    private void deleteSelectedOutfit(int outfitIndex) {
+        OutfitDbHelper helper = new OutfitDbHelper(getApplicationContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+
+        int row = db.delete(OutfitContract.OutfitEntry.TABLE_NAME,
+                OutfitContract.OutfitEntry.COLUMN_NAME + "=?",
+                new String[]{outfitNames[outfitIndex]});
+
+        if (row == 1) {
+            outfitNames = getSavedOutfits();
+            listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, outfitNames);
+            listView.setAdapter(listAdapter);
+            listAdapter.notifyDataSetChanged();
+        }
     }
 
     private void selectOutfitForToday(int outfitIndex) {
@@ -161,8 +200,8 @@ public class SavedOutfitsActivity extends AppCompatActivity {
 
         Cursor cursor = db.query(OutfitContract.OutfitEntry.TABLE_NAME,
                 null,
-                null,
-                null,
+                OutfitContract.OutfitEntry.COLUMN_NAME + "!=?",
+                new String[]{"today"},
                 null,
                 null,
                 OutfitContract.OutfitEntry.COLUMN_NAME);
@@ -255,5 +294,8 @@ public class SavedOutfitsActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "onResume called");
+        outfitNames = getSavedOutfits();
+        listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_expandable_list_item_1, outfitNames);
+        listView.setAdapter(listAdapter);
     }
 }

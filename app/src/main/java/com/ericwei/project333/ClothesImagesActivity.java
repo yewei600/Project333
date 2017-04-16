@@ -53,12 +53,6 @@ public class ClothesImagesActivity extends AppCompatActivity implements ImageAda
         showingSavedOutfitItems = intent.getBooleanExtra("showingSavedOutfit", false);
         isSelectingTodaysOutfit = intent.getBooleanExtra("selectingTodayOutfit", false);
 
-//        if (isSelectingTodaysOutfit) {
-//            toolbar = (Toolbar) findViewById(R.id.save_today_outfit_toolbar);
-//            setSupportActionBar(toolbar);
-//            getSupportActionBar().setDisplayShowTitleEnabled(false);
-//        }
-
         //grab the images data
         if (!showingSavedOutfitItems) {
             new FetchItemsDataTask().execute();
@@ -76,7 +70,6 @@ public class ClothesImagesActivity extends AppCompatActivity implements ImageAda
                 break;
             }
         }
-
         int j = 0;
         //querying each clothes item
         for (int i = 0; i < itemIDs.length; i++) {
@@ -107,11 +100,14 @@ public class ClothesImagesActivity extends AppCompatActivity implements ImageAda
     @Override
     public void onItemClick(Item item) {
         Log.d(TAG, "in onItemClick!!()");
-        Toast.makeText(this, "clicked item number " + item.getId(), Toast.LENGTH_SHORT).show();
         if (isSelectingItems) {
-            OutfitPickingData.getInstance().appendOutfitNumber(item.getId());
-            OutfitPickingData.getInstance().appendOutfitBitmap(item.getItemImage());
-            Toast.makeText(getApplicationContext(), "tapped!!!", Toast.LENGTH_SHORT).show();
+            if (!OutfitPickingData.getInstance().getOutfitNumbers().contains(item.getId())) {
+                OutfitPickingData.getInstance().appendOutfitNumber(item.getId());
+                OutfitPickingData.getInstance().appendOutfitBitmap(item.getItemImage());
+                Toast.makeText(getApplicationContext(), "Added!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "Item already added", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -166,7 +162,7 @@ public class ClothesImagesActivity extends AppCompatActivity implements ImageAda
                 }
                 imageAdapter.setItemData(items);
             } else {
-                Toast.makeText(getApplicationContext(), "You have no favorite movies!",
+                Toast.makeText(getApplicationContext(), "You have no " + category + " saved!",
                         Toast.LENGTH_LONG).show();
             }
             if (dialog != null && dialog.isShowing()) {
@@ -175,31 +171,6 @@ public class ClothesImagesActivity extends AppCompatActivity implements ImageAda
             super.onPostExecute(itemCursor);
         }
     }
-
-//    public class FetchItemByItemIDsTask extends AsyncTask<int[], Object, Item[]> {
-//
-//        @Override
-//        protected Item[] doInBackground(Integer[]... integers) {
-//
-//            Cursor cursor = getContentResolver().query(ClothesContract.ClothesEntry.CONTENT_URI,
-//                    null,
-//                    null,
-//                    null,
-//                    ClothesContract.ClothesEntry.COLUMN_CATEGORY);
-//
-//            cursor.moveToFirst();
-//            int j = 0;
-//            for (int i = 0; i < cursor.getCount(); i++) {
-//                if (cursor.getInt(cursor.getColumnIndex(ClothesContract.ClothesEntry.COLUMN_ID)) == integers[j])
-//            }
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Item[] items) {
-//
-//        }
-//    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

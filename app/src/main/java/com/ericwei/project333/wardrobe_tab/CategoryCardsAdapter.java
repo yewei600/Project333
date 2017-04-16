@@ -1,11 +1,13 @@
 package com.ericwei.project333.wardrobe_tab;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.ericwei.project333.ItemsDatabaseUtils;
 import com.ericwei.project333.R;
 
 import java.util.List;
@@ -17,6 +19,8 @@ import java.util.List;
 public class CategoryCardsAdapter extends RecyclerView.Adapter<CategoryCardsAdapter.ViewHolder> {
 
     private final List<String> categoryItems;
+    private final int[] categoryItemsCount;
+    private Context context;
 
     private CategoryCardClickListener clickListener;
 
@@ -24,9 +28,11 @@ public class CategoryCardsAdapter extends RecyclerView.Adapter<CategoryCardsAdap
         void onItemClick(int cardIndex);
     }
 
-    public CategoryCardsAdapter(List<String> categoryItems, CategoryCardClickListener listener) {
+    public CategoryCardsAdapter(List<String> categoryItems, CategoryCardClickListener listener, Context context) {
         this.categoryItems = categoryItems;
         this.clickListener = listener;
+        this.context = context;
+        this.categoryItemsCount = new int[categoryItems.size()];
     }
 
     @Override
@@ -38,12 +44,19 @@ public class CategoryCardsAdapter extends RecyclerView.Adapter<CategoryCardsAdap
     @Override
     public void onBindViewHolder(CategoryCardsAdapter.ViewHolder holder, int position) {
         holder.categoryName.setText(categoryItems.get(position));
-        holder.numItems.setText("");
+        holder.numItems.setText(categoryItemsCount[position] + " items");
     }
 
     @Override
     public int getItemCount() {
         return categoryItems.size();
+    }
+
+    public void updateCategoryItemCount() {
+        for (int i = 0; i < categoryItems.size(); i++) {
+            categoryItemsCount[i] = ItemsDatabaseUtils.numItemForCategory(context, categoryItems.get(i));
+        }
+        notifyDataSetChanged();
     }
 
 
