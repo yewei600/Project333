@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.ericwei.project333.ClothesImagesActivity;
 import com.ericwei.project333.R;
@@ -94,7 +93,6 @@ public class WardrobeFragment extends Fragment implements CategoryCardsAdapter.C
 
     @Override
     public void onItemClick(int cardIndex) {
-        Toast.makeText(getContext(), categoryList.get(cardIndex) + " clicked", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getContext(), ClothesImagesActivity.class);
         intent.putExtra("category", categoryArray[cardIndex]);
         startActivity(intent);

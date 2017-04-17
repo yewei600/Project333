@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.ericwei.project333.clothes_tab.FirstFragment;
+import com.ericwei.project333.job_service.ScheduleJobUtilities;
 import com.ericwei.project333.profile_tab.SettingsFragment;
 import com.ericwei.project333.wardrobe_tab.WardrobeFragment;
 
@@ -36,8 +37,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = getIntent();
-
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
@@ -51,10 +50,14 @@ public class MainActivity extends AppCompatActivity {
         receiver = new ItemAddedBroadcastReceiver();
 
         intentFilter.addAction(getString(R.string.action_item_added));
+        registerReceiver(receiver, intentFilter);
+
+        ScheduleJobUtilities.scheduleDeleteTodayOutfit(this);
     }
 
     @Override
     protected void onResume() {
+        Log.d(TAG, "onResume!!!");
         super.onResume();
         registerReceiver(receiver, intentFilter);
     }

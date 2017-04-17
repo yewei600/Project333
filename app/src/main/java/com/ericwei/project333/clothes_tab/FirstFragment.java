@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.ericwei.project333.ClothesImagesActivity;
@@ -34,6 +35,7 @@ public class FirstFragment extends Fragment {
 
     CardView todayCard;
     CardView outfitsCard;
+    Button startButton;
 
     public FirstFragment() {
     }
@@ -49,6 +51,7 @@ public class FirstFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_one, container, false);
         todayCard = (CardView) view.findViewById(R.id.todayCard);
         outfitsCard = (CardView) view.findViewById(R.id.outfitsCard);
+        startButton = (Button) view.findViewById(R.id.start_button);
 
         todayCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +64,13 @@ public class FirstFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 outfitsCardClicked();
+            }
+        });
+
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //initiate the challenge
             }
         });
 
@@ -77,7 +87,8 @@ public class FirstFragment extends Fragment {
     private void todayCardClicked() {
         //check here if today's outfit exists or not
         SharedPreferences sharedPrefs = getContext().getSharedPreferences("todayOutfit", Context.MODE_PRIVATE);
-        if (sharedPrefs.getBoolean("today", false)) {
+        Boolean todayOutfitExists = sharedPrefs.getBoolean("today", false);
+        if (todayOutfitExists) {
             Toast.makeText(getContext(), "Exists!!", Toast.LENGTH_SHORT).show();
             int[] todaysOutfit = getTodaysOutfit();
             Intent intent = new Intent(getContext(), ClothesImagesActivity.class);
@@ -108,7 +119,6 @@ public class FirstFragment extends Fragment {
                     })
                     .show();
         }
-
     }
 
     private int[] getTodaysOutfit() {

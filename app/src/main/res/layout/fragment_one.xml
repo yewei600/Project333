@@ -12,17 +12,28 @@
         android:src="@drawable/p333" />
 
     <TextView
+        android:id="@+id/tv_date_count"
         android:layout_width="180dp"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:layout_gravity="center"
-        android:text="34/90 days done!" />
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="34/90 days done!"
+        android:textSize="30dp" />
+
+    <Button
+        android:id="@+id/start_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Start the challenge!" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/todayCard"
         android:layout_width="300dp"
         android:layout_height="100dp"
         android:layout_gravity="center"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="30dp"
         app:cardBackgroundColor="#cf0f0f"
         app:cardCornerRadius="5dp">
 

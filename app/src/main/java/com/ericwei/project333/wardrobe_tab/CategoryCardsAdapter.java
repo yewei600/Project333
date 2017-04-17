@@ -44,7 +44,11 @@ public class CategoryCardsAdapter extends RecyclerView.Adapter<CategoryCardsAdap
     @Override
     public void onBindViewHolder(CategoryCardsAdapter.ViewHolder holder, int position) {
         holder.categoryName.setText(categoryItems.get(position));
-        holder.numItems.setText(categoryItemsCount[position] + " items");
+        if (categoryItemsCount[position] < 2) {
+            holder.numItems.setText(categoryItemsCount[position] + " item");
+        } else {
+            holder.numItems.setText(categoryItemsCount[position] + " items");
+        }
     }
 
     @Override

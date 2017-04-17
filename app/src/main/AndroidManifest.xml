@@ -38,7 +38,21 @@
         <activity android:name=".ClothesImagesActivity" />
         <activity android:name=".PickOutfitActivity" />
         <activity android:name=".clothes_tab.SavedOutfitsActivity" />
-        <activity android:name=".ViewOutfitActivity"></activity>
+
+        <receiver android:name=".MainActivity$ItemAddedBroadcastReceiver">
+            <intent-filter>
+                <action android:name="com.ericwei.project333.ITEM_ADDED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".job_service.DeleteTodayOutfitJobService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>
