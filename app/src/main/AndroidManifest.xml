@@ -39,12 +39,6 @@
         <activity android:name=".PickOutfitActivity" />
         <activity android:name=".clothes_tab.SavedOutfitsActivity" />
 
-        <receiver android:name=".MainActivity$ItemAddedBroadcastReceiver">
-            <intent-filter>
-                <action android:name="com.ericwei.project333.ITEM_ADDED" />
-            </intent-filter>
-        </receiver>
-
         <service
             android:name=".job_service.DeleteTodayOutfitJobService"
             android:exported="false">
@@ -52,6 +46,8 @@
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
         </service>
+
+        <receiver android:name=".AlarmReceiver" />
 
     </application>
 

@@ -1,5 +1,7 @@
 package com.ericwei.project333.clothes_tab;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,13 +18,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ericwei.project333.AlarmReceiver;
 import com.ericwei.project333.ClothesImagesActivity;
 import com.ericwei.project333.PickOutfitActivity;
 import com.ericwei.project333.R;
 import com.ericwei.project333.data.OutfitContract;
 import com.ericwei.project333.data.OutfitDbHelper;
+
+import java.util.Calendar;
 
 /**
  * Created by ericwei on 2017-03-19.
@@ -36,6 +42,11 @@ public class FirstFragment extends Fragment {
     CardView todayCard;
     CardView outfitsCard;
     Button startButton;
+    TextView progressTextView;
+    AlarmManager alarmManager;
+    PendingIntent alarmIntent;
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor editor;
 
     public FirstFragment() {
     }
@@ -43,6 +54,23 @@ public class FirstFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getContext(), AlarmReceiver.class);
+        alarmIntent = PendingIntent.getBroadcast(getContext(), 0, intent, 0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 36);
+        alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, alarmIntent);
+
+        sharedPref = getContext().getSharedPreferences("dayCount", Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
+        if (!sharedPref.contains("dateCount")) {
+            editor.putInt("dateCount", 0);
+        }
     }
 
     @Nullable
@@ -52,6 +80,10 @@ public class FirstFragment extends Fragment {
         todayCard = (CardView) view.findViewById(R.id.todayCard);
         outfitsCard = (CardView) view.findViewById(R.id.outfitsCard);
         startButton = (Button) view.findViewById(R.id.start_button);
+        progressTextView = (TextView) view.findViewById(R.id.tv_date_count);
+
+        //set the day count textview
+        updateDayCountTextView(sharedPref.getInt("dateCount", 0));
 
         todayCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,19 +102,32 @@ public class FirstFragment extends Fragment {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //initiate the challenge
+                //initiate the alarm manager
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences("dayCount", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+
+                editor.putInt("dateCount", sharedPreferences.getInt("dateCount", 0) + 1);
+                editor.commit();
+                int dayCount = sharedPref.getInt("dateCount", 0);
+                Log.d(TAG, "dayCOunt is " + String.valueOf(dayCount));
+                updateDayCountTextView(dayCount);
+                startButton.setVisibility(View.INVISIBLE);
             }
         });
 
         return view;
     }
 
-    //check wardrobe, see what title should be set for the cardview: (add, change? )
-    //SHOULD THIS OPTION BE IN A   NOT VERY ADVERTISED SPOT? (like the settings menu?)
-    private void checkWardrobeStatus() {
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateDayCountTextView(sharedPref.getInt("dateCount", 0));
     }
 
+    private void updateDayCountTextView(int dayCount) {
+        progressTextView.setText(dayCount + "/90 days");
+    }
 
     private void todayCardClicked() {
         //check here if today's outfit exists or not
@@ -179,4 +224,5 @@ public class FirstFragment extends Fragment {
         Intent intent = new Intent(getContext(), SavedOutfitsActivity.class);
         startActivity(intent);
     }
+
 }
