@@ -45,8 +45,15 @@ public class FirstFragment extends Fragment {
     TextView progressTextView;
     AlarmManager alarmManager;
     PendingIntent alarmIntent;
-    SharedPreferences sharedPref;
-    SharedPreferences.Editor editor;
+
+    SharedPreferences dayCountSharedPref;
+    SharedPreferences.Editor dayCountEditor;
+
+    SharedPreferences dateSharedPref;
+    SharedPreferences.Editor dateEditor;
+
+    SharedPreferences startedSharedPref;
+    SharedPreferences.Editor startedEditor;
 
     public FirstFragment() {
     }
@@ -59,17 +66,21 @@ public class FirstFragment extends Fragment {
         Intent intent = new Intent(getContext(), AlarmReceiver.class);
         alarmIntent = PendingIntent.getBroadcast(getContext(), 0, intent, 0);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 36);
-        alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, alarmIntent);
+        dayCountSharedPref = getContext().getSharedPreferences("dayCount", Context.MODE_PRIVATE);
+        dayCountEditor = dayCountSharedPref.edit();
+        if (!dayCountSharedPref.contains("dayCount")) {
+            dayCountEditor.putInt("dayCount", 0);
+            dayCountEditor.commit();
+        }
 
-        sharedPref = getContext().getSharedPreferences("dayCount", Context.MODE_PRIVATE);
-        editor = sharedPref.edit();
-        if (!sharedPref.contains("dateCount")) {
-            editor.putInt("dateCount", 0);
+        dateSharedPref = getContext().getSharedPreferences("date", Context.MODE_PRIVATE);
+        dateEditor = dateSharedPref.edit();
+
+        startedSharedPref = getContext().getSharedPreferences("started", Context.MODE_PRIVATE);
+        startedEditor = startedSharedPref.edit();
+        if (!startedSharedPref.contains("started")) {
+            startedEditor.putBoolean("started", false);
+            startedEditor.commit();
         }
     }
 
@@ -80,10 +91,15 @@ public class FirstFragment extends Fragment {
         todayCard = (CardView) view.findViewById(R.id.todayCard);
         outfitsCard = (CardView) view.findViewById(R.id.outfitsCard);
         startButton = (Button) view.findViewById(R.id.start_button);
+
+        if (startedSharedPref.getBoolean("started", false)) {
+            startButton.setVisibility(View.INVISIBLE);
+        }
+
         progressTextView = (TextView) view.findViewById(R.id.tv_date_count);
 
         //set the day count textview
-        updateDayCountTextView(sharedPref.getInt("dateCount", 0));
+        updateDayCountTextView();
 
         todayCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,15 +119,14 @@ public class FirstFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //initiate the alarm manager
-                SharedPreferences sharedPreferences = getContext().getSharedPreferences("dayCount", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
+                startedEditor.putBoolean("started", true);
+                startedEditor.commit();
 
+                Calendar cal = Calendar.getInstance();
+                int todayDate = cal.get(Calendar.DAY_OF_MONTH);
+                dateEditor.putInt("date", todayDate);
+                dateEditor.commit();
 
-                editor.putInt("dateCount", sharedPreferences.getInt("dateCount", 0) + 1);
-                editor.commit();
-                int dayCount = sharedPref.getInt("dateCount", 0);
-                Log.d(TAG, "dayCOunt is " + String.valueOf(dayCount));
-                updateDayCountTextView(dayCount);
                 startButton.setVisibility(View.INVISIBLE);
             }
         });
@@ -122,11 +137,26 @@ public class FirstFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        updateDayCountTextView(sharedPref.getInt("dateCount", 0));
+        updateDayCountTextView();
     }
 
-    private void updateDayCountTextView(int dayCount) {
+    private void updateDayCountTextView() {
+        int dayCount = 0;
+
+        //if the challenge has started
+        if (startedSharedPref.getBoolean("started", false)) {
+            //get current day
+            Calendar calendar = Calendar.getInstance();
+            int todayNumber = calendar.get(Calendar.DAY_OF_MONTH);
+
+            if (dateSharedPref.getInt("date", 0) != todayNumber) {
+                dayCount = dayCountSharedPref.getInt("date", 0) + 1;
+                dayCountEditor.putInt("date", dayCount);
+                dayCountEditor.commit();
+            }
+        }
         progressTextView.setText(dayCount + "/90 days");
+
     }
 
     private void todayCardClicked() {
