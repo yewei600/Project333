@@ -14,7 +14,6 @@ import android.util.Log;
 import com.ericwei.project333.clothes_tab.FirstFragment;
 import com.ericwei.project333.data.ClothesContract;
 import com.ericwei.project333.data.ClothesDbHelper;
-import com.ericwei.project333.job_service.ScheduleJobUtilities;
 import com.ericwei.project333.wardrobe_tab.WardrobeFragment;
 
 import java.util.ArrayList;
@@ -41,9 +40,6 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.getTabAt(0).setText("Home");
         tabLayout.getTabAt(1).setText(findNumberItems());
-
-
-        ScheduleJobUtilities.scheduleDeleteTodayOutfit(this);
     }
 
     @Override

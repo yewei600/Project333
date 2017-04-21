@@ -104,11 +104,12 @@ public class ClothesImagesActivity extends AppCompatActivity implements ImageAda
             } else {
                 Toast.makeText(getApplicationContext(), "Item already added", Toast.LENGTH_SHORT).show();
             }
-        } else {
-            Intent intent = new Intent(this, ItemDetailViewActivity.class);
-            intent.putExtra("ItemID", item.getId());
-            startActivityForResult(intent, 0);
         }
+//        else {
+//            Intent intent = new Intent(this, ItemDetailViewActivity.class);
+//            intent.putExtra("ItemID", item.getId());
+//            startActivityForResult(intent, 0);
+//        }
     }
 
     @Override

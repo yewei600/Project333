@@ -37,14 +37,6 @@
         <activity android:name=".PickOutfitActivity" />
         <activity android:name=".clothes_tab.SavedOutfitsActivity" />
 
-        <service
-            android:name=".job_service.DeleteTodayOutfitJobService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
-            </intent-filter>
-        </service>
-
         <receiver android:name=".AlarmReceiver" />
 
         <activity android:name=".ItemDetailViewActivity"></activity>
