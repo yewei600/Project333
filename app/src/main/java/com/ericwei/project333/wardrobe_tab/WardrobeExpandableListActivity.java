@@ -1,7 +1,9 @@
 package com.ericwei.project333.wardrobe_tab;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.database.DatabaseUtils;
@@ -91,7 +93,7 @@ public class WardrobeExpandableListActivity extends AppCompatActivity {
     private void saveItem(String category, String subcategory) {
         if (getDatabaseRowCount() < 33) {
             ContentValues contentValues = new ContentValues();
-            long itemNumber = getDatabaseRowCount() + 1;
+            long itemNumber = getNextRowID();
             contentValues.put(ClothesContract.ClothesEntry.COLUMN_CATEGORY, category);
             contentValues.put(ClothesContract.ClothesEntry.COLUMN_SUBCATEGORY, subcategory);
             contentValues.put(ClothesContract.ClothesEntry.COLUMN_IMAGE, imageToByte(itemImage));
@@ -113,6 +115,17 @@ public class WardrobeExpandableListActivity extends AppCompatActivity {
         Log.d(TAG, "database number of rows ==" + cnt);
         db.close();
         return cnt;
+    }
+
+    private long getNextRowID() {
+        SharedPreferences rowIDSharedPref = getSharedPreferences("rowID", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = rowIDSharedPref.edit();
+
+        int nextID = rowIDSharedPref.getInt("nextRowID", 0) + 1;
+        editor.putInt("nextRowID", nextID);
+        editor.commit();
+
+        return nextID;
     }
 
 }

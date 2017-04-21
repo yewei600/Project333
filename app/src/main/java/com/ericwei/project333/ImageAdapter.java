@@ -17,7 +17,6 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
     private Item[] clothesItems;
     private ItemCardClickListener clickListener;
-    private Context context;
 
     public interface ItemCardClickListener {
         void onItemClick(Item item);
@@ -25,7 +24,6 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
     public ImageAdapter(ItemCardClickListener clickListener, Context context) {
         this.clickListener = clickListener;
-        this.context = context;
     }
 
     @Override

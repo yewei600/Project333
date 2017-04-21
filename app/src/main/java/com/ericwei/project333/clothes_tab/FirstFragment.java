@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ericwei.project333.AlarmReceiver;
 import com.ericwei.project333.ClothesImagesActivity;
@@ -218,8 +217,6 @@ public class FirstFragment extends Fragment {
             intent.putExtra("itemids", todaysOutfit);
             startActivity(intent);
         } else {
-            Toast.makeText(getContext(), "Today's outfit don't exist!", Toast.LENGTH_SHORT).show();
-
             new AlertDialog.Builder(getContext())
                     .setTitle("Pick Today's Outfit")
                     .setMessage("New Outfit or Saved Outfit?")

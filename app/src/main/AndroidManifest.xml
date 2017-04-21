@@ -32,7 +32,6 @@
             android:authorities="com.ericwei.project333"
             android:exported="false" />
 
-        <activity android:name=".clothes_tab.PickClothesCategoryActivity" />
         <activity android:name=".wardrobe_tab.WardrobeExpandableListActivity" />
         <activity android:name=".ClothesImagesActivity" />
         <activity android:name=".PickOutfitActivity" />
@@ -48,6 +47,7 @@
 
         <receiver android:name=".AlarmReceiver" />
 
+        <activity android:name=".ItemDetailViewActivity"></activity>
     </application>
 
 </manifest>

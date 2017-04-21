@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,8 +30,6 @@ public class ClothesImagesActivity extends AppCompatActivity implements ImageAda
     private int[] itemIDs;
     private boolean isSelectingItems;
     private boolean showingSavedOutfitItems;
-    private boolean isSelectingTodaysOutfit;
-    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +48,6 @@ public class ClothesImagesActivity extends AppCompatActivity implements ImageAda
         category = intent.getStringExtra("category");
         isSelectingItems = intent.getBooleanExtra("selecting", false);
         showingSavedOutfitItems = intent.getBooleanExtra("showingSavedOutfit", false);
-        isSelectingTodaysOutfit = intent.getBooleanExtra("selectingTodayOutfit", false);
 
         //grab the images data
         if (!showingSavedOutfitItems) {
@@ -108,12 +104,19 @@ public class ClothesImagesActivity extends AppCompatActivity implements ImageAda
             } else {
                 Toast.makeText(getApplicationContext(), "Item already added", Toast.LENGTH_SHORT).show();
             }
+        } else {
+            Intent intent = new Intent(this, ItemDetailViewActivity.class);
+            intent.putExtra("ItemID", item.getId());
+            startActivityForResult(intent, 0);
         }
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0 && resultCode == RESULT_OK) {
+            imageAdapter.notifyDataSetChanged();
+        }
     }
 
     public class FetchItemsDataTask extends AsyncTask<Object, Object, Cursor> {
