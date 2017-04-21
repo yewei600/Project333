@@ -26,7 +26,6 @@
             android:name=".clothes_tab.TodayOutfitActivity"
             android:label="@string/title_activity_today_outfit"
             android:theme="@style/AppTheme" />
-        <activity android:name=".wardrobe_tab.EditPictureActivity" />
 
         <provider
             android:name=".data.ClothesContentProvider"

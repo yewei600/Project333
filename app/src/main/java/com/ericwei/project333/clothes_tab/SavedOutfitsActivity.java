@@ -133,9 +133,12 @@ public class SavedOutfitsActivity extends AppCompatActivity {
         OutfitDbHelper helper = new OutfitDbHelper(this);
         SQLiteDatabase db = helper.getWritableDatabase();
 
+        //delete "today" outfit, if it exists
+        db.delete(OutfitContract.OutfitEntry.TABLE_NAME, OutfitContract.OutfitEntry.COLUMN_NAME + "=?", new String[]{"today"});
+
         int[] outfitNumbers = getSelectedOutfit(outfitNames[outfitIndex]);
         ContentValues contentValues = new ContentValues();
-        contentValues.put(OutfitContract.OutfitEntry.COLUMN_NAME, outfitNames[outfitIndex]);
+        contentValues.put(OutfitContract.OutfitEntry.COLUMN_NAME, "today");
 
         for (int i = 0; i < outfitNumbers.length; i++) {
             switch (i) {
@@ -172,18 +175,20 @@ public class SavedOutfitsActivity extends AppCompatActivity {
                 default:
                     Log.d(TAG, "error putting contentValues in");
             }
-            long id = db.insert(OutfitContract.OutfitEntry.TABLE_NAME, null, contentValues);
-            if (id > 0) {
-                Log.d(TAG, "saved successful! outfit== " + outfitNames[outfitIndex]);
-
-                SharedPreferences sharedPreferences = getSharedPreferences("todayOutfit", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean("today", true);
-                editor.commit();
-            } else {
-                Log.d(TAG, "outfit not saved");
-            }
         }
+
+        long id = db.insert(OutfitContract.OutfitEntry.TABLE_NAME, null, contentValues);
+        if (id > 0) {
+            Log.d(TAG, "saved successful! outfit== " + outfitNames[outfitIndex]);
+
+            SharedPreferences sharedPreferences = getSharedPreferences("todayOutfit", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("today", true);
+            editor.commit();
+        } else {
+            Log.d(TAG, "outfit not saved");
+        }
+
     }
 
     private void openClothesImagesActivity(int outfitIndex) {

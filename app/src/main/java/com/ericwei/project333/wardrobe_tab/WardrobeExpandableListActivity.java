@@ -89,16 +89,20 @@ public class WardrobeExpandableListActivity extends AppCompatActivity {
     }
 
     private void saveItem(String category, String subcategory) {
-        ContentValues contentValues = new ContentValues();
-        long itemNumber = getDatabaseRowCount() + 1;
-        contentValues.put(ClothesContract.ClothesEntry.COLUMN_CATEGORY, category);
-        contentValues.put(ClothesContract.ClothesEntry.COLUMN_SUBCATEGORY, subcategory);
-        contentValues.put(ClothesContract.ClothesEntry.COLUMN_IMAGE, imageToByte(itemImage));
-        contentValues.put(ClothesContract.ClothesEntry.COLUMN_ID, itemNumber);
+        if (getDatabaseRowCount() < 33) {
+            ContentValues contentValues = new ContentValues();
+            long itemNumber = getDatabaseRowCount() + 1;
+            contentValues.put(ClothesContract.ClothesEntry.COLUMN_CATEGORY, category);
+            contentValues.put(ClothesContract.ClothesEntry.COLUMN_SUBCATEGORY, subcategory);
+            contentValues.put(ClothesContract.ClothesEntry.COLUMN_IMAGE, imageToByte(itemImage));
+            contentValues.put(ClothesContract.ClothesEntry.COLUMN_ID, itemNumber);
 
-        Uri uri = getContentResolver().insert(ClothesContract.ClothesEntry.CONTENT_URI, contentValues);
-        if (uri != null) {
-            Toast.makeText(this, "Added clothes " + category + " " + subcategory + " " + itemNumber, Toast.LENGTH_SHORT).show();
+            Uri uri = getContentResolver().insert(ClothesContract.ClothesEntry.CONTENT_URI, contentValues);
+            if (uri != null) {
+                Toast.makeText(this, "Added clothes " + category + " " + subcategory + " " + itemNumber, Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "You already have 33 items!", Toast.LENGTH_SHORT).show();
         }
     }
 

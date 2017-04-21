@@ -55,6 +55,9 @@ public class FirstFragment extends Fragment {
     SharedPreferences startedSharedPref;
     SharedPreferences.Editor startedEditor;
 
+    SharedPreferences todayOutfitSharedPref;
+    SharedPreferences.Editor todayOutfitEditor;
+
     public FirstFragment() {
     }
 
@@ -68,10 +71,7 @@ public class FirstFragment extends Fragment {
 
         dayCountSharedPref = getContext().getSharedPreferences("dayCount", Context.MODE_PRIVATE);
         dayCountEditor = dayCountSharedPref.edit();
-        if (!dayCountSharedPref.contains("dayCount")) {
-            dayCountEditor.putInt("dayCount", 0);
-            dayCountEditor.commit();
-        }
+        Log.d(TAG, "dayCount ==" + dayCountSharedPref.getInt("dayCount", 0));
 
         dateSharedPref = getContext().getSharedPreferences("date", Context.MODE_PRIVATE);
         dateEditor = dateSharedPref.edit();
@@ -82,11 +82,16 @@ public class FirstFragment extends Fragment {
             startedEditor.putBoolean("started", false);
             startedEditor.commit();
         }
+
+        todayOutfitSharedPref = getContext().getSharedPreferences("todayOutfit", Context.MODE_PRIVATE);
+        todayOutfitEditor = todayOutfitSharedPref.edit();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView");
+
         View view = inflater.inflate(R.layout.fragment_one, container, false);
         todayCard = (CardView) view.findViewById(R.id.todayCard);
         outfitsCard = (CardView) view.findViewById(R.id.outfitsCard);
@@ -99,7 +104,7 @@ public class FirstFragment extends Fragment {
         progressTextView = (TextView) view.findViewById(R.id.tv_date_count);
 
         //set the day count textview
-        updateDayCountTextView();
+        updateDayCountAndDeleteTodayOutfit();
 
         todayCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,16 +123,26 @@ public class FirstFragment extends Fragment {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //initiate the alarm manager
-                startedEditor.putBoolean("started", true);
-                startedEditor.commit();
 
-                Calendar cal = Calendar.getInstance();
-                int todayDate = cal.get(Calendar.DAY_OF_MONTH);
-                dateEditor.putInt("date", todayDate);
-                dateEditor.commit();
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Starting the challenge?")
+                        .setMessage("Make sure you have saved your outfits first!")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                startedEditor.putBoolean("started", true);
+                                startedEditor.commit();
 
-                startButton.setVisibility(View.INVISIBLE);
+                                Calendar cal = Calendar.getInstance();
+                                int todayDate = cal.get(Calendar.DAY_OF_MONTH);
+                                dateEditor.putInt("date", todayDate);
+                                dateEditor.commit();
+
+                                startButton.setVisibility(View.INVISIBLE);
+                            }
+                        })
+                        .setNegativeButton("Not yet", null)
+                        .show();
             }
         });
 
@@ -135,13 +150,13 @@ public class FirstFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        updateDayCountTextView();
+    public void onStart() {
+        super.onStart();
+        updateDayCountAndDeleteTodayOutfit();
     }
 
-    private void updateDayCountTextView() {
-        int dayCount = 0;
+    private void updateDayCountAndDeleteTodayOutfit() {
+        Log.d(TAG, "updateDayCountAndDeleteTodayOutfit");
 
         //if the challenge has started
         if (startedSharedPref.getBoolean("started", false)) {
@@ -149,22 +164,54 @@ public class FirstFragment extends Fragment {
             Calendar calendar = Calendar.getInstance();
             int todayNumber = calendar.get(Calendar.DAY_OF_MONTH);
 
+            //a day has passed
             if (dateSharedPref.getInt("date", 0) != todayNumber) {
-                dayCount = dayCountSharedPref.getInt("date", 0) + 1;
-                dayCountEditor.putInt("date", dayCount);
-                dayCountEditor.commit();
+                //add daycount
+                int dayCount = dayCountSharedPref.getInt("dayCount", 0);
+
+                if (dayCount == 89) {
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Congrats on making it to the last day!")
+                            .setMessage("the counter will roll back to 0 tomorrow")
+                            .setPositiveButton("Dismiss", null)
+                            .show();
+                    dayCount++;
+                    dayCountEditor.putInt("dayCount", dayCount);
+                    dayCountEditor.commit();
+                } else if (dayCount == 90) {
+                    dayCount = 0;
+                    dayCountEditor.putInt("dayCount", dayCount);
+                    dayCountEditor.commit();
+
+                    startedEditor.putBoolean("started", false);
+                    startedEditor.commit();
+                } else {
+                    dayCount++;
+                    dayCountEditor.putInt("dayCount", dayCount);
+                    dayCountEditor.commit();
+                }
+
+                //update the date
+                dateEditor.putInt("date", todayNumber);
+                dateEditor.commit();
+
+                //empty the today's outfit
+                todayOutfitEditor.putBoolean("today", false);
+                todayOutfitEditor.commit();
+
+                OutfitDbHelper helper = new OutfitDbHelper(getContext());
+                SQLiteDatabase db = helper.getReadableDatabase();
+
+                db.delete(OutfitContract.OutfitEntry.TABLE_NAME, OutfitContract.OutfitEntry.COLUMN_NAME + "=?", new String[]{"today"});
             }
         }
-        progressTextView.setText(dayCount + "/90 days");
-
+        progressTextView.setText(dayCountSharedPref.getInt("dayCount", 0) + "/90 days");
     }
 
     private void todayCardClicked() {
         //check here if today's outfit exists or not
-        SharedPreferences sharedPrefs = getContext().getSharedPreferences("todayOutfit", Context.MODE_PRIVATE);
-        Boolean todayOutfitExists = sharedPrefs.getBoolean("today", false);
+        Boolean todayOutfitExists = todayOutfitSharedPref.getBoolean("today", false);
         if (todayOutfitExists) {
-            Toast.makeText(getContext(), "Exists!!", Toast.LENGTH_SHORT).show();
             int[] todaysOutfit = getTodaysOutfit();
             Intent intent = new Intent(getContext(), ClothesImagesActivity.class);
             intent.putExtra("showingSavedOutfit", true);

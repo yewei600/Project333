@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.ericwei.project333.clothes_tab.SavedOutfitsActivity">
 
     <android.support.v7.widget.Toolbar
@@ -21,6 +22,8 @@
         android:id="@+id/empty_tv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="No Saved Outfits!" />
+        android:gravity="center"
+        android:text="No Saved Outfits!"
+        android:textSize="30dp" />
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

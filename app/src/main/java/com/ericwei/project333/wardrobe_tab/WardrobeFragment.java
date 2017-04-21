@@ -85,7 +85,7 @@ public class WardrobeFragment extends Fragment implements CategoryCardsAdapter.C
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
 
-            Intent intent = new Intent(getContext(), EditPictureActivity.class);
+            Intent intent = new Intent(getContext(), WardrobeExpandableListActivity.class);
             intent.putExtra("Image", imageBitmap);
             startActivity(intent);
         }

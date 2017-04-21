@@ -163,7 +163,7 @@ public class ClothesImagesActivity extends AppCompatActivity implements ImageAda
                 imageAdapter.setItemData(items);
             } else {
                 Toast.makeText(getApplicationContext(), "You have no " + category + " saved!",
-                        Toast.LENGTH_LONG).show();
+                        Toast.LENGTH_SHORT).show();
             }
             if (dialog != null && dialog.isShowing()) {
                 dialog.dismiss();
